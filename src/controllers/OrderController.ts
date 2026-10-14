@@ -1,3 +1,8 @@
+
+import { PrismaOrderRepository } from '../repositories/PrismaOrderRepository';
+import { EtherealMailProvider } from '../providers/EtherealMailProvider';
+import { NotificationService } from '../services/NotificationService';
+import { OrderService } from '../services/OrderService';
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { getMailClient } from '../lib/mail';
@@ -6,9 +11,16 @@ import logger from '../lib/logger';
 
 const prisma = new PrismaClient();
 
+
+
+
 // Lembram do God Class q falamos em aula? Este é um exemplo
 export class OrderController {
   
+  private orderService = new OrderService(
+  new PrismaOrderRepository(),
+  new NotificationService(new EtherealMailProvider())
+);
   // Método Gigante: Violação de SRP
   async processOrder(req: Request, res: Response) {
     try {
